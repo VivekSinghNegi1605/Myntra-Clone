@@ -8,7 +8,17 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://myntra-clone-91ts.vercel.app"],
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        origin === "http://localhost:5173" ||
+        origin.endsWith(".vercel.app")
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS blocked"));
+      }
+    },
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
   }),
