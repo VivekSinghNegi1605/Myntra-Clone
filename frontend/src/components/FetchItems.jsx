@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { itemsActions } from "../store/itemsSlice";
 import { fetchStatusActions } from "../store/fetchStatusSlice";
 
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+
 const FetchItems = () => {
   const fetchStatus = useSelector((store) => store.fetchStatus);
   const dispatch = useDispatch();
@@ -13,7 +15,7 @@ const FetchItems = () => {
     const signal = controller.signal;
 
     dispatch(fetchStatusActions.markFetchingStarted());
-    fetch("http://localhost:8080/items", { signal })
+    fetch(BASE_URL + "items", { signal })
       .then((res) => res.json())
       .then(({ items }) => {
         dispatch(itemsActions.addInitialItems(items));
