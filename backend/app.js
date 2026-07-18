@@ -1,21 +1,25 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const { getStoredItems, storeItems } = require("./data/items");
 
 const app = express();
 
-app.use(bodyParser.json());
-
-const cors = require("cors");
-
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://myntra-clone-cnuu.vercel.app"],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
   }),
 );
+
+app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  next();
+});
 
 app.get("/items", async (req, res) => {
   const storedItems = await getStoredItems();
